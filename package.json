@@ -1,0 +1,24 @@
+{
+  "name": "cli-demo",
+  "version": "1.0.0",
+  "description": "A CLI for vue program",
+  "main": "index.js",
+  "bin": {
+    "yyh": "./bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yee",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^5.1.0",
+    "download-git-repo": "^3.0.2",
+    "inquirer": "^7.2.0",
+    "ncp": "^2.0.0",
+    "ora": "^4.0.4",
+    "pacote": "^11.1.10",
+    "shelljs": "^0.8.4"
+  }
+}
