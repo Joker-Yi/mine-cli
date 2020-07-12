@@ -19,6 +19,7 @@ const spinner = ora();
 let url = 'Joker-Yi/vue-temp'
 let clone = false
 
+// 问答模板
 let userQuestions = [
   {
     type: 'input',
@@ -44,6 +45,22 @@ let userQuestions = [
       return 'Your Name <you@example.com>';
     }
   },
+  {
+    type: 'input',
+    name: 'projectAuthor',
+    message: 'Author',
+    default() {
+      return 'Your Name <you@example.com>';
+    }
+  },
+  {
+    type: 'input',
+    name: 'gitUrl',
+    message: 'Please enter the git repository address/name \n of the program template to be cloned(E.g：Joker-Yi/vue-temp)',
+    default() {
+      return url;
+    }
+  }
 ];
 
 program
@@ -56,86 +73,40 @@ program
     .command('init')
     .action(() => {
       inquirer.prompt(userQuestions) // 调用问答 列表
-          .then((answers) => {
-            spinner.start('Start download template');
-            // pacote 包的下载，缓存和管理   包名  缓存/下载到的路径  参数配置
-            // return pacote.extract('may-templates-demo', './mayCache', {
-            //   cache: false
-            // }).then(() => {
-              spinner.start('Start download template');
-              return answers;
-            // });
-          })
           .then(answers => {
             return new Promise((resolve, reject) => {
-              spinner.start('Start copy template');
-              // 复制模板  复制源  复制到哪儿去   回调函数
-              // ncp(cacheDir, answers.projectName, err => {
-              //   if (err) {
-              //     reject(err);
-              //   } else {
-              //     shell.rm('-rf', cacheDir); // 删除缓存
-              //     spinner.succeed('Copy template succeed');
-              //     resolve(answers);
-              //   }
-              // });
-              downLoad(url, answers.projectName, {
+              spinner.start(`Start download template from ` + answers.gitUrl);
+              downLoad(answers.gitUrl|| url, answers.projectName, {
                 clone
               }, err => {
-                if ( err){
+                if (err) {
                   reject(err)
                 } else {
                   spinner.stop()
-                  console.log(err?err:"项目创建成功")
+                  console.log(err ? err :chalk.green("Created successfully..."))
                   resolve(answers);
                 }
               })
             });
           })
-          // .then((answers) => {
-          //   // 修改package.json
-          //   let packagejsonPath = path.resolve(process.cwd(), `./${answers.projectName}/package.json`);
-          //   const packageJson = Object.assign(
-          //       require(packagejsonPath),
-          //       {
-          //         name: answers.projectName,
-          //         author: answers.projectAuthor,
-          //         version: '0.0.1'
-          //       }
-          //   );
-          //   fs.writeFileSync(packagejsonPath, JSON.stringify(packageJson, null, 4));
-          //   // 重命名文件
-          //   fs.renameSync(
-          //       `${answers.projectName}/.npmrc.text`,
-          //       `${answers.projectName}/.npmrc`
-          //   );
-          //   fs.renameSync(
-          //       `${answers.projectName}/.gitignore.text`,
-          //       `${answers.projectName}/.gitignore`
-          //   );
-          //   // 替换变量
-          //   let readmePath = `./${answers.projectName}/README.md`;
-          //   let data = fs.readFileSync(readmePath)
-          //       .toString()
-          //       .replace('PROJECT_DESCRIPTION', answers.projectDescription);
-          //   fs.writeFileSync(readmePath, data);
-          //   return answers
-          // })
           .then(answers => {
-            console.log(chalk.green('\n To created an project'));
+            console.log(chalk.green('\n To start your project'));
             console.log(
-                `\n you can ${chalk.green(
+                `\n You can ${chalk.green(
                     `cd ${answers.projectName}`
                 )} && ${chalk.green(
                     'npm i \n'
                 )}`
             );
-            let packagejsonPath = path.resolve(process.cwd(), `./${answers.projectName}/package.json`);
-            console.log(packagejsonPath)
-            fs.readFile(packagejsonPath, 'utf8', function (err, data) {
-              console.log(data['dependencies']);
-              var obj = JSON.parse(data)
-            })
+            // let packagejsonPath = path.resolve(process.cwd(), `./${answers.projectName}/package.json`);
+            // console.log(packagejsonPath)
+            // fs.readFile(packagejsonPath, 'utf8', function (err, data) {
+            //   console.log(data['dependencies']);
+            //   var obj = JSON.parse(data)
+            // })
+          })
+          .catch((err) => {
+            console.log(chalk.red('\n' + err));
           })
     });
 
