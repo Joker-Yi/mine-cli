@@ -75,15 +75,16 @@ program
       inquirer.prompt(userQuestions) // 调用问答 列表
           .then(answers => {
             return new Promise((resolve, reject) => {
-              spinner.start(`Start download template from ` + answers.gitUrl);
-              downLoad(answers.gitUrl|| url, answers.projectName, {
+              url = answers.gitUrl || url
+              spinner.start(`Start download template from ` + url);
+              downLoad( url, answers.projectName, {
                 clone
               }, err => {
                 if (err) {
                   reject(err)
                 } else {
                   spinner.stop()
-                  console.log(err ? err :chalk.green("Created successfully..."))
+                  console.log(err ? err :chalk.green(" Created successfully..."))
                   resolve(answers);
                 }
               })

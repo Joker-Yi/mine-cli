@@ -1,6 +1,6 @@
 {
-  "name": "cli-demo",
-  "version": "1.0.0",
+  "name": "yee-cli",
+  "version": "0.0.1",
   "description": "A CLI for vue program",
   "main": "index.js",
   "bin": {
